@@ -4,27 +4,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Módulo 2: ejercicio de evaluación final Enrica Garcia</title>
-  <!-- Google Fonts
-      <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
-    -->
-  <!-- Icons
-    
-    -->
+  <title>Módulo 2 ejercicio de evaluación final Enrica Garcia</title>
   <link rel="stylesheet" href="./assets/css/main.css" />
   <link rel="icon" href="./assets/images/favicon.png" />
 </head>
 
 <body>
-  <header class="header">
-    <h1>Cambia el título</h1>
-  </header>
   <main class="main">
+    <section class="main-section-search">
+      <nav class="main-section-search-menu">
+        <img class="main-section-search-menu-logo" src="./assets/images/logo-color.png" alt="logo-cocktail">
+      </nav>
+      <h1 class="main-section-search-title">Busca tu cocktail</h1>
 
+     <!-- Form -->
+      <form class="main-section-form" action="#" method="get">
+        <label class="main-section-form-title" for="cocktail-name">
+          Introduce el nombre del cocktail
+        </label>
+
+        <input class="js-search-input main-section-form-search-input" 
+        type="text" 
+        name="cocktail-name" 
+        id="cocktail-name" 
+        placeholder="Ej: Martini" 
+        value="Margarita"
+        title="Introduce el nombre del cocktail">
+
+        <input class="js-search-button main-section-form-search-button" 
+        type="button" 
+        value="Buscar"
+        title="Clica aquí para buscar">
+
+
+        <input class="js-reset-button main-section-form-reset-button" 
+        type="button" 
+        value="Reset"
+        title="Clica aquí para reiniciar la búsqueda">
+
+      </form>
+    </section>
+
+    <!-- Cocktail list section -->
+    <section>
+      <ul class="js-cocktails-list">
+
+      </ul>
+    </section>
+
+    <!-- Favorite cocktail list section -->
+    <section>
+      <ul class="js-favorite-cocktails-list">
+
+      </ul>
+    </section>
   </main>
-  <footer class="footer">
 
-  </footer>
   <script src="./assets/js/main.js"></script>
 </body>
 

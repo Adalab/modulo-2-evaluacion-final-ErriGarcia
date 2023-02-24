@@ -1,83 +1,106 @@
-'use strict'
-// Variables
+/**
+ * HOME PAGE
+ */
 
-const inputSearch = document.querySelector('.js-search-input')
-const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita'
-const productsList = document.querySelector('.js-cocktails-list')
-const searchButton = document.querySelector('.js-search-button')
-const favoriteproductsList = document.querySelector('.js-favorite-cocktails-list')
+fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
+    .then(response => response.json())
+    .then(data => {
+        const cocktails = data.drinks
+        createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
+        showCocktailList('.js-cocktails-list', cocktails)
 
-
-let productsListData = []
-let favoriteProductsListData = []
-
-// First: Fetch
-
-fetch(url)
-.then((response) => response.json())
-.then((data) => {
-    productsListData = data.drinks
-    renderPoducts(productsList)
-})
+        const favoriteButtons = document.querySelectorAll('.js-favorite-icon')
 
 
-// function to show for each product
-const renderPoducts = (list) => {
-    list.innerHTML = ""
-    list.innerHTML = `<h3>Hay ${productsListData.length} tipos de cocktails</h3>`
-    for (const eachProduct of productsListData) {
 
-        list.innerHTML += `<li>
-        <article>
-            <img src="${eachProduct.strDrinkThumb}" width="200">
-            <div>
-                <h4>${eachProduct.strDrink}</h4>
-                <a href="#" class="js-favorite-button" id="${eachProduct.idDrink}">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
-            </div>
-        </article>
-        </li>` 
-    }
-    addEventToIcon()
-}
 
-// function for click search button
-const handleSearchClick = (event) => {
-    event.preventDefault()
-    const inputSearchValue = inputSearch.value.toLowerCase()
-    let newUrl = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearchValue}`
-    fetch(newUrl)
-    .then((response) => response.json())
-    .then((data) => {
-        productsListData = data.drinks
-        renderPoducts(productsList)
+
+
+
+
+        const favoriteCocktails = []
+
+        function handleClickFavoriteButton(event) {
+            const cocktailId = event.target.id
+            const selectedCocktail = cocktails.find(cocktail => cocktail.idDrink === cocktailId)
+            console.log(selectedCocktail)
+            favoriteCocktails.push(selectedCocktail)
+            console.log(favoriteCocktails)
+        }
+
+        for (const favoriteButton of favoriteButtons) {
+            favoriteButton.addEventListener('click', handleClickFavoriteButton)
+        }
+
     })
-}
 
-// function for click favorite button
-const handleFavoriteClick = (event) => {
-    event.preventDefault()
-    const idProductSelected = event.currentTarget.id
-    event.currentTarget.classList.toggle('selected')
+
+/**
+ * SEARCH
+ */
+
+const searchButton = document.querySelector('.js-search-button')
+
+function handleClickSearchButton() {
+    const searchInput = document.querySelector('.js-search-input')
+    const searchInputValue = searchInput.value
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
+        .then(response => response.json())
+        .then(data => {
+            const cocktails = data.drinks
+            createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
+            showCocktailList('.js-cocktails-list', cocktails)
+        })
     
-    const selectedProduct = productsListData.find((product) => {
-    product.id === idProductSelected})
-    console.log(selectedProduct)
-        
-    favoriteProductsListData.push(selectedProduct)
-    console.log(favoriteProductsListData)
-    renderPoducts(favoriteproductsList)
 }
 
-// function to add event to an array
-function addEventToIcon() {
-const favoriteButtons = document.querySelectorAll('.js-favorite-button')
-    for (const eachFavoriteIcon of favoriteButtons) {
-        eachFavoriteIcon.addEventListener('click', handleFavoriteClick)
+searchButton.addEventListener('click', handleClickSearchButton)
+
+/**
+ * FAVORITE
+ */
+
+
+
+
+
+/**
+ * GENERAL FUNCTIONTS
+ */
+
+/**
+ * Receives a text and a class and create a title
+ * 
+ * @param {*} listClassSelector element's class in which you want to show the title
+ * @param {*} textTitle text for the title
+ */
+
+function createTitle(listClassSelector, textTitle) {
+    const element = document.querySelector(listClassSelector)
+    element.innerHTML = textTitle
+}
+
+/**
+ * Receives a class and a cocktail list you want to show
+ * 
+ * @param {*} classList element's class in which you want to add the cocktails
+ * @param {*} cocktailsList list of cocktails you want to show
+ */
+function showCocktailList(classList, cocktailsList) {
+    const element = document.querySelector(classList)
+    element.innerHTML = ""
+    for (const cocktail of cocktailsList) {
+        element.innerHTML +=
+        `<li>
+            <article>
+            <img src="${cocktail.strDrinkThumb}">
+            <div>
+                <h4>${cocktail.strDrink}</h4>
+                <button class="js-favorite-icon" id="${cocktail.idDrink}">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+            </article>
+        </li>`
     }
 }
-
-
-// Events
-searchButton.addEventListener('click', handleSearchClick)

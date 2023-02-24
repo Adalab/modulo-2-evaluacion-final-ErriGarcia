@@ -129,4 +129,7 @@ table {
 .main-section-search-menu-logo {
   width: 120px; }
 
+.selected {
+  color: red; }
+
 /*# sourceMappingURL=main.css.map */

@@ -14,18 +14,25 @@ fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
 
 
 
-
-
-
-
         const favoriteCocktails = []
 
         function handleClickFavoriteButton(event) {
             const cocktailId = event.target.id
+            event.target.classList.toggle('selected')
             const selectedCocktail = cocktails.find(cocktail => cocktail.idDrink === cocktailId)
-            console.log(selectedCocktail)
-            favoriteCocktails.push(selectedCocktail)
-            console.log(favoriteCocktails)
+
+            const indexFavoriteCocktail = favoriteCocktails.findIndex(cocktail => cocktail.idDrink === cocktailId)
+            console.log(indexFavoriteCocktail)
+
+            if (indexFavoriteCocktail === -1) {
+                favoriteCocktails.push(selectedCocktail)
+            } else {
+                favoriteCocktails.splice(indexFavoriteCocktail, 1)
+            }
+            createTitle('.js-favorite-cocktails-title', `Hay ${favoriteCocktails.length} cocktails favoritos`)
+            for (const favoriteCocktail of favoriteCocktails) {
+                showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
+            }
         }
 
         for (const favoriteButton of favoriteButtons) {
@@ -93,7 +100,7 @@ function showCocktailList(classList, cocktailsList) {
         element.innerHTML +=
         `<li>
             <article>
-            <img src="${cocktail.strDrinkThumb}">
+            <img src="${cocktail.strDrinkThumb}" width="100px">
             <div>
                 <h4>${cocktail.strDrink}</h4>
                 <button class="js-favorite-icon" id="${cocktail.idDrink}">

@@ -8,39 +8,27 @@ let cocktails = []
 const searchInput = document.querySelector('.js-search-input')
 const searchButton = document.querySelector('.js-search-button')
 const resetButton = document.querySelector('.js-reset-button')
+const removeFavoriteListButton = document.querySelector('.js-remove-favorite-cocktail-list');
+
+searchCocktails()
 
 /**
- * HOME PAGE
- */
-
-fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
-    .then(response => response.json())
-    .then(data => {
-        cocktails = data.drinks
-        createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
-        showCocktailList('.js-cocktails-list', cocktails)
-        addOrRemoveCocktailToFavoriteList()
-        getCocktailsFromLocalStorage()
-    })
-
-
-/**
- * SEARCH
+ * EVENTS LISTENERS
  */
 
 function handleClickSearchButton() {
-    const searchInputValue = searchInput.value
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
-        .then(response => response.json())
-        .then(data => {
-            cocktails = data.drinks
-            createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
-            showCocktailList('.js-cocktails-list', cocktails)
-            addOrRemoveCocktailToFavoriteList()
-        })
-    
+    searchCocktails()
 }
 searchButton.addEventListener('click', handleClickSearchButton)
+
+function handleEnterKeyPress(event) {
+    if (event.key === "Enter") {
+        event.preventDefault()
+        searchCocktails()
+    }
+}
+
+searchInput.addEventListener('keypress', handleEnterKeyPress)
 
 /**
  * RESET
@@ -51,30 +39,15 @@ function handleClickResetButton() {
 resetButton.addEventListener('click', handleClickResetButton)
 
 /**
- * SAVE COCKTAILS IN LOCAL STORAGE
- */
-
-function saveInLocalStorage() {
-    localStorage.setItem('favoriteCocktails', JSON.stringify(favoriteCocktails))
-}
-
-/**
  * GET COCKTAILS FROM LOCAL STORAGE
 */
 function getCocktailsFromLocalStorage() {
     let favoriteCocktailsStored = JSON.parse(localStorage.getItem('favoriteCocktails'))
     if (favoriteCocktailsStored) {
         favoriteCocktails = favoriteCocktailsStored
+        createTitle('.js-favorite-cocktails-title', `Hay ${favoriteCocktails.length} cocktails favoritos`)
         showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
     }
-}
-
-/**
- * REMOVE COCKTAIL FROM LOCAL STORAGE
- */
-
-function removeCocktailFromLocalStorage(cocktail) {
-    localStorage.removeItem(cocktail)
 }
 
 /**
@@ -102,6 +75,7 @@ function showCocktailList(classList, cocktailsList) {
     let selected = ''
     let favoriteList = ''
 
+    // add class selected to all button in favorite cocktail list
     if (classList === '.js-favorite-cocktails-list') {
         selected = 'selected'
         favoriteList = '-favorite-list'
@@ -110,6 +84,10 @@ function showCocktailList(classList, cocktailsList) {
     const element = document.querySelector(classList)
     element.innerHTML = ''
     for (const cocktail of cocktailsList) {
+        if (!cocktail.strDrinkThumb) {
+            cocktail.strDrinkThumb = `https://via.placeholder.com/210x295/ffffff/666666/?text=${cocktail.strDrink}`
+        }
+
         element.innerHTML +=
         `<li>
             <article>
@@ -125,6 +103,7 @@ function showCocktailList(classList, cocktailsList) {
         </li>`
     }
 
+    // add event listeners just to button in favorite cocktail list
     if (classList === '.js-favorite-cocktails-list') {
         removeFavoriteCocktail()
     }
@@ -137,35 +116,35 @@ function addOrRemoveCocktailToFavoriteList() {
         favoriteButton.addEventListener('click', handleClickFavoriteButton)
     }
 
-    console.log(favoriteButtons, 'favoriteButtons')
-
 
     function handleClickFavoriteButton(event) {
         const cocktailId = event.target.id
         const selectedCocktail = cocktails.find(cocktail => cocktail.idDrink === cocktailId)
         const indexFavoriteCocktail = favoriteCocktails.findIndex(cocktail => cocktail.idDrink === cocktailId)
 
-        console.log(event, 'event')
-
         if (indexFavoriteCocktail === -1) {
             event.target.classList.add('selected')
             favoriteCocktails.push(selectedCocktail)
-            saveInLocalStorage()
         } else {
             event.target.classList.remove('selected')
             favoriteCocktails.splice(indexFavoriteCocktail, 1)
-            removeCocktailFromLocalStorage(selectedCocktail)
-            saveInLocalStorage()
         }
 
         if (favoriteCocktails.length > 0) {
             createTitle('.js-favorite-cocktails-title', `Hay ${favoriteCocktails.length} cocktails favoritos`)
+            removeFavoriteListButton.classList.remove('hidden')
         } else {
             createTitle('.js-favorite-cocktails-title', 'Añade un cocktail en tu lista de favoritos')
+            removeFavoriteListButton.classList.add('hidden')
         }
         showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
+        localStorage.setItem('favoriteCocktails', JSON.stringify(favoriteCocktails))
     }
 }
+
+/**
+ * Function that allows favorite cocktails to be unselected thanks to the button
+ */
 
 function removeFavoriteCocktail() {
     const favoriteButtonsInFavoriteList = document.querySelectorAll('.js-favorite-icon-favorite-list')
@@ -177,19 +156,56 @@ function removeFavoriteCocktail() {
     function handleClickFavoriteButtonInFavoriteList(event) {
         const cocktailId = event.target.id
 
+        // find cocktail by Id
+        const favoriteCocktail = favoriteCocktails.find(cocktail => cocktail.idDrink === cocktailId)
+
         const indexFavoriteCocktail = favoriteCocktails.findIndex(cocktail => cocktail.idDrink === cocktailId)
         favoriteCocktails.splice(indexFavoriteCocktail, 1)
 
-        const selectedCocktail = document.getElementById(cocktailId)
-        selectedCocktail.classList.remove('selected')
+        const selectedButtonCocktail = document.getElementById(cocktailId)
+        selectedButtonCocktail.classList.remove('selected')
 
         if (favoriteCocktails.length > 0) {
             createTitle('.js-favorite-cocktails-title', `Hay ${favoriteCocktails.length} cocktails favoritos`)
         } else {
             createTitle('.js-favorite-cocktails-title', 'Añade un cocktail en tu lista de favoritos')
+            removeFavoriteListButton.classList.add('hidden')
         }
         
         showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
+        localStorage.setItem('favoriteCocktails', JSON.stringify(favoriteCocktails))
     }
 }
 
+function searchCocktails() {
+    let searchInputValue = "margarita"
+
+    if (searchInput.value) {
+        searchInputValue = searchInput.value
+    }
+
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
+        .then(response => response.json())
+        .then(data => {
+            cocktails = data.drinks
+            createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
+            showCocktailList('.js-cocktails-list', cocktails)
+            addOrRemoveCocktailToFavoriteList()
+            getCocktailsFromLocalStorage()
+        })
+}
+
+function handleClickRemoveFavoriteListButton() {
+    localStorage.removeItem('favoriteCocktails')
+    favoriteCocktails = []
+    createTitle('.js-favorite-cocktails-title', 'Añade un cocktail en tu lista de favoritos')
+    showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
+    removeFavoriteListButton.classList.add('hidden')
+
+    // Select all favorite button in main list to remove the class 'selected'
+    const favoriteButtons = document.querySelectorAll('.js-favorite-icon')
+    for (const favoriteButton of favoriteButtons) {
+        favoriteButton.classList.remove('selected')
+    }    
+}
+removeFavoriteListButton.addEventListener('click', handleClickRemoveFavoriteListButton)

@@ -3,9 +3,11 @@
  */
 
 // Use for the home page and search
-const favoriteCocktails = []
+let favoriteCocktails = []
 let cocktails = []
+const searchInput = document.querySelector('.js-search-input')
 const searchButton = document.querySelector('.js-search-button')
+const resetButton = document.querySelector('.js-reset-button')
 
 /**
  * HOME PAGE
@@ -18,6 +20,7 @@ fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
         createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
         showCocktailList('.js-cocktails-list', cocktails)
         addOrRemoveCocktailToFavoriteList()
+        getCocktailsFromLocalStorage()
     })
 
 
@@ -26,7 +29,6 @@ fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita')
  */
 
 function handleClickSearchButton() {
-    const searchInput = document.querySelector('.js-search-input')
     const searchInputValue = searchInput.value
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
         .then(response => response.json())
@@ -38,8 +40,42 @@ function handleClickSearchButton() {
         })
     
 }
-
 searchButton.addEventListener('click', handleClickSearchButton)
+
+/**
+ * RESET
+ */
+function handleClickResetButton() {
+    searchInput.value = ""
+}
+resetButton.addEventListener('click', handleClickResetButton)
+
+/**
+ * SAVE COCKTAILS IN LOCAL STORAGE
+ */
+
+function saveInLocalStorage() {
+    localStorage.setItem('favoriteCocktails', JSON.stringify(favoriteCocktails))
+}
+
+/**
+ * GET COCKTAILS FROM LOCAL STORAGE
+*/
+function getCocktailsFromLocalStorage() {
+    let favoriteCocktailsStored = JSON.parse(localStorage.getItem('favoriteCocktails'))
+    if (favoriteCocktailsStored) {
+        favoriteCocktails = favoriteCocktailsStored
+        showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
+    }
+}
+
+/**
+ * REMOVE COCKTAIL FROM LOCAL STORAGE
+ */
+
+function removeCocktailFromLocalStorage(cocktail) {
+    localStorage.removeItem(cocktail)
+}
 
 /**
  * GENERAL FUNCTIONTS
@@ -114,9 +150,12 @@ function addOrRemoveCocktailToFavoriteList() {
         if (indexFavoriteCocktail === -1) {
             event.target.classList.add('selected')
             favoriteCocktails.push(selectedCocktail)
+            saveInLocalStorage()
         } else {
             event.target.classList.remove('selected')
             favoriteCocktails.splice(indexFavoriteCocktail, 1)
+            removeCocktailFromLocalStorage(selectedCocktail)
+            saveInLocalStorage()
         }
 
         if (favoriteCocktails.length > 0) {

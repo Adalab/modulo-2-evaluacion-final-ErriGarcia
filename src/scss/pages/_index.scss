@@ -1,11 +1,239 @@
-.main-section-search-menu-logo {
-    width: 120px;
+.main {
+    font-family: $font-family-Work-sans;
+    background-color: white;
+    color: $-color-main-text;
+    display: flex;
+    flex-direction: column;
+    &-header {
+        cursor: pointer;
+        &-menu {
+            &-logo {
+                width: 5rem;
+                @include desktop {
+                    width: 7rem;
+                }
+            }
+        }
+    }
+    &-section-hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        &-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            background-image: linear-gradient(-225deg,
+                        #5c49a2 0%,
+                        #9473b7 29%,
+                        #ff1361 67%,
+                        #fff800 100%);
+            background-size: 200% auto;
+            color: #fff;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 2.5s linear infinite;
+            @include desktop {
+                font-size: 6rem;
+            }
+        }
+        &-image {
+            width: 4rem;
+            rotate: -25deg;
+            @include desktop {
+                width: 8rem;
+            }
+        }
+    }
+    &-section-search {
+        margin-top: 2rem;
+        padding: 1.5rem 2rem;
+        background-color: rgb(255, 248, 236);
+        @include tablet {
+            margin-top: 3rem;
+            padding: 2rem;
+        }
+        &-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            @include desktop {
+                font-size: 2rem;
+            }
+        }
+        &-form {
+            display: grid;
+            justify-content: center;
+            margin-top: 0.5rem;
+            gap: 0.3rem;
+            @include tablet {
+                margin-top: 1rem;
+            }
+            &-search-button {
+                justify-self: center;
+            }
+            &-reset-button {
+                justify-self: center;
+            }
+        }
+        &-error {
+                color: red;
+                margin-top: 1rem;
+                font-size: 0.8rem;
+                text-align: center;
+        }
+    }
+    &-container {
+        margin-top: 2rem;
+        padding: 1rem 2rem 3rem 2rem;
+        display: flex;
+        flex: 1 1 0px;
+        gap: 1.5rem;
+        @include tablet {
+            padding: 1rem 2rem 4rem 2rem;
+        }
+        @include desktop {
+            padding: 1rem 2rem 5rem 2rem;
+        }
+        &-section-cocktails-list {
+            flex-basis: 50%;
+            &-title {
+                font-weight: bold;
+                text-align: center;
+                @include tablet {
+                    font-size: 1.1rem;
+                }
+            }
+            &-main-list {
+                margin-top: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                &-li {
+                    display: flex;
+                    justify-content: center;
+                    &-article {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    &-container {
+                        text-align: center;
+                        display: flex;
+                        margin-top: 0.4rem;
+                        gap: 0.5rem;
+                    }
+                }
+            }
+        }
+        &-section-favorite-cocktails-list {
+            display: flex;
+                flex-direction: column;
+                align-items: center;
+            flex-basis: 50%;
+            &-title {
+                font-weight: bold;
+                text-align: center;
+                @include tablet {
+                    font-size: 1.1rem;
+                }
+            }
+            &-favorite-list {
+                margin-top: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    }
+}   
+
+// Button to cancel the favorite list cocktails
+.cancel-button {
+    width: 8rem;
+    background-color: transparent;
+    border: 1px solid #562c2c;
+    color: $-color-bright-text;
+    padding: 6px;
+    margin: 4px 0;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: "Work Sans", sans-serif;
+    margin-top: 1rem;
 }
 
-.selected {
-    background-color: red;
-}
-
+// Class hidden for the cancel button
 .hidden {
     display: none;
+}
+
+// Classes selected for the heart buttons
+.selected {
+    fill: red;
+    stroke: none;
+    cursor: pointer;
+}
+
+ion-icon {
+    fill: transparent;
+    stroke: black;
+    stroke-width: 30;
+    transition: all 0.5s;
+}
+
+.favorite-button {
+    cursor: pointer;
+}
+
+// INPUTS
+input[type=text] {
+    width: 14rem;
+    padding: 8px;
+    margin: 4px 4px 4px 0;
+    border-radius: 4px;
+    border: 2px solid #562c2c;
+    font-family: $font-family-Work-sans;
+    background: transparent;
+}
+
+input[type=button] {
+    width: 6rem;
+    background-color: #f2542d;
+    border: none;
+    color: white;
+    padding: 8px;
+    margin: 4px 4px 4px 0;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: $font-family-Work-sans;
+    animation: wiggle 3s infinite;
+}
+
+input[type=reset] {
+    width: 5rem;
+    background-color: transparent;
+    border: 1px solid #562c2c;
+    color: #f2542d;
+    padding: 6px;
+    margin: 4px 0;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: $font-family-Work-sans;
+}
+
+::placeholder {
+    color: rgb(104, 104, 104);
+}
+
+// Size cocktail image
+.cocktail-img {
+    border-radius: 4rem;
+    width: 6rem; 
+    @include tablet {
+        width: 7rem;
+    }
 }

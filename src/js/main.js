@@ -8,7 +8,8 @@ let cocktails = []
 const searchInput = document.querySelector('.js-search-input')
 const searchButton = document.querySelector('.js-search-button')
 const resetButton = document.querySelector('.js-reset-button')
-const removeFavoriteListButton = document.querySelector('.js-remove-favorite-cocktail-list');
+const removeFavoriteListButton = document.querySelector('.js-remove-favorite-cocktail-list')
+const errorElement = document.querySelector('.js-error-message')
 
 searchCocktails()
 
@@ -27,14 +28,11 @@ function handleEnterKeyPress(event) {
         searchCocktails()
     }
 }
-
 searchInput.addEventListener('keypress', handleEnterKeyPress)
 
-/**
- * RESET
- */
 function handleClickResetButton() {
     searchInput.value = ""
+    handleClickRemoveFavoriteListButton()
 }
 resetButton.addEventListener('click', handleClickResetButton)
 
@@ -48,6 +46,20 @@ function getCocktailsFromLocalStorage() {
         createTitle('.js-favorite-cocktails-title', `Hay ${favoriteCocktails.length} cocktails favoritos`)
         showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
     }
+}
+
+/**
+ * SHOW ERROR MESSAGE
+ */
+function showErrorMessage() {
+    errorElement.classList.remove('hidden')
+}
+
+/**
+ * REMOVE ERROR MESSAGE
+ */
+function removeErrorMessage() {
+    errorElement.classList.add('hidden')
 }
 
 /**
@@ -89,20 +101,18 @@ function showCocktailList(classList, cocktailsList) {
         }
 
         element.innerHTML +=
-        `<li>
-            <article>
-            <img src="${cocktail.strDrinkThumb}" width="100px">
-            <div>
+        `<li class="main-container-section-cocktails-list-main-list-li">
+            <article class="main-container-section-cocktails-list-main-list-li-article">
+            <img class="cocktail-img" src="${cocktail.strDrinkThumb}">
+            <div class="main-container-section-cocktails-list-main-list-li-container">
                 <h4>${cocktail.strDrink}</h4>
-                <button class="js-favorite-icon${favoriteList} ${selected}" id="${cocktail.idDrink}">
-
-                </button>
-
+                <ion-icon name="heart" class="js-favorite-icon${favoriteList} ${selected} favorite-button" id="${cocktail.idDrink}">
+                </ion-icon>
             </div>
             </article>
         </li>`
     }
-
+    
     // add event listeners just to button in favorite cocktail list
     if (classList === '.js-favorite-cocktails-list') {
         removeFavoriteCocktail()
@@ -125,6 +135,8 @@ function addOrRemoveCocktailToFavoriteList() {
         if (indexFavoriteCocktail === -1) {
             event.target.classList.add('selected')
             favoriteCocktails.push(selectedCocktail)
+            // show button to reset the list favorite
+            removeFavoriteListButton.classList.remove('hidden')
         } else {
             event.target.classList.remove('selected')
             favoriteCocktails.splice(indexFavoriteCocktail, 1)
@@ -145,7 +157,6 @@ function addOrRemoveCocktailToFavoriteList() {
 /**
  * Function that allows favorite cocktails to be unselected thanks to the button
  */
-
 function removeFavoriteCocktail() {
     const favoriteButtonsInFavoriteList = document.querySelectorAll('.js-favorite-icon-favorite-list')
 
@@ -182,16 +193,24 @@ function searchCocktails() {
 
     if (searchInput.value) {
         searchInputValue = searchInput.value
+    } else {
+        showErrorMessage()
     }
 
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
         .then(response => response.json())
         .then(data => {
             cocktails = data.drinks
-            createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
-            showCocktailList('.js-cocktails-list', cocktails)
-            addOrRemoveCocktailToFavoriteList()
-            getCocktailsFromLocalStorage()
+            if (!cocktails) {
+                showErrorMessage()
+            } else {
+                createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
+                showCocktailList('.js-cocktails-list', cocktails)
+                addOrRemoveCocktailToFavoriteList()
+                getCocktailsFromLocalStorage()
+                keepCocktailsSelected()
+                removeErrorMessage()
+            }
         })
 }
 
@@ -209,3 +228,13 @@ function handleClickRemoveFavoriteListButton() {
     }    
 }
 removeFavoriteListButton.addEventListener('click', handleClickRemoveFavoriteListButton)
+
+// Events
+searchButton.addEventListener('click', handleSearchClick)
+
+        for (const cocktailId of cocktailsIds) {
+            const element = document.getElementById(cocktailId)
+            element.classList.add('selected')
+            removeFavoriteListButton.classList.remove('hidden')
+        }
+    

@@ -1,2 +1,31 @@
 .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+    row-gap: 12px;
+    border-top: solid 1px rgb(189, 188, 188);
+
+    @include tablet {
+        flex-direction: row;
+        justify-content: space-between;
+        height: 60px;
+        padding: 10px 40px 10px 41px;
+    }
+
+    &-name-app {
+        font-family: $font-family-Work-sans;
+        font-size: 14px;
+        color: black;
+        line-height: 20px;
+        opacity: 0.5;
+    }
+
+    &-logo {
+        &-logo-adalab {
+            width: 103px;
+            height: 40px;
+        }
+    }
 }

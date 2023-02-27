@@ -8,12 +8,8 @@ let cocktails = []
 const searchInput = document.querySelector('.js-search-input')
 const searchButton = document.querySelector('.js-search-button')
 const resetButton = document.querySelector('.js-reset-button')
-<<<<<<< HEAD
-const removeFavoriteListButton = document.querySelector('.js-remove-favorite-cocktail-list');
-=======
 const removeFavoriteListButton = document.querySelector('.js-remove-favorite-cocktail-list')
 const errorElement = document.querySelector('.js-error-message')
->>>>>>> sass
 
 searchCocktails()
 
@@ -32,22 +28,11 @@ function handleEnterKeyPress(event) {
         searchCocktails()
     }
 }
-<<<<<<< HEAD
-
-searchInput.addEventListener('keypress', handleEnterKeyPress)
-
-/**
- * RESET
- */
-function handleClickResetButton() {
-    searchInput.value = ""
-=======
 searchInput.addEventListener('keypress', handleEnterKeyPress)
 
 function handleClickResetButton() {
     searchInput.value = ""
     handleClickRemoveFavoriteListButton()
->>>>>>> sass
 }
 resetButton.addEventListener('click', handleClickResetButton)
 
@@ -62,8 +47,6 @@ function getCocktailsFromLocalStorage() {
         showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
     }
 }
-<<<<<<< HEAD
-=======
 
 /**
  * SHOW ERROR MESSAGE
@@ -78,12 +61,10 @@ function showErrorMessage() {
 function removeErrorMessage() {
     errorElement.classList.add('hidden')
 }
->>>>>>> sass
 
 /**
  * GENERAL FUNCTIONTS
  */
-<<<<<<< HEAD
 
 /**
  * Receives a text and a class and create a title
@@ -97,21 +78,6 @@ function createTitle(listClassSelector, textTitle) {
 }
 
 /**
-=======
-
-/**
- * Receives a text and a class and create a title
- * 
- * @param {*} listClassSelector element's class in which you want to show the title
- * @param {*} textTitle text for the title
- */
-function createTitle(listClassSelector, textTitle) {
-    const element = document.querySelector(listClassSelector)
-    element.innerHTML = textTitle
-}
-
-/**
->>>>>>> sass
  * Receives a class and a cocktail list you want to show
  * 
  * @param {*} classList element's class in which you want to add the cocktails
@@ -135,17 +101,6 @@ function showCocktailList(classList, cocktailsList) {
         }
 
         element.innerHTML +=
-<<<<<<< HEAD
-        `<li>
-            <article>
-            <img src="${cocktail.strDrinkThumb}" width="100px">
-            <div>
-                <h4>${cocktail.strDrink}</h4>
-                <button class="js-favorite-icon${favoriteList} ${selected}" id="${cocktail.idDrink}">
-
-                </button>
-
-=======
         `<li class="main-container-section-cocktails-list-main-list-li">
             <article class="main-container-section-cocktails-list-main-list-li-article">
             <img class="cocktail-img" src="${cocktail.strDrinkThumb}">
@@ -153,16 +108,11 @@ function showCocktailList(classList, cocktailsList) {
                 <h4>${cocktail.strDrink}</h4>
                 <ion-icon name="heart" class="js-favorite-icon${favoriteList} ${selected} favorite-button" id="${cocktail.idDrink}">
                 </ion-icon>
->>>>>>> sass
             </div>
             </article>
         </li>`
     }
-<<<<<<< HEAD
-
-=======
     
->>>>>>> sass
     // add event listeners just to button in favorite cocktail list
     if (classList === '.js-favorite-cocktails-list') {
         removeFavoriteCocktail()
@@ -185,11 +135,8 @@ function addOrRemoveCocktailToFavoriteList() {
         if (indexFavoriteCocktail === -1) {
             event.target.classList.add('selected')
             favoriteCocktails.push(selectedCocktail)
-<<<<<<< HEAD
-=======
             // show button to reset the list favorite
             removeFavoriteListButton.classList.remove('hidden')
->>>>>>> sass
         } else {
             event.target.classList.remove('selected')
             favoriteCocktails.splice(indexFavoriteCocktail, 1)
@@ -210,10 +157,6 @@ function addOrRemoveCocktailToFavoriteList() {
 /**
  * Function that allows favorite cocktails to be unselected thanks to the button
  */
-<<<<<<< HEAD
-
-=======
->>>>>>> sass
 function removeFavoriteCocktail() {
     const favoriteButtonsInFavoriteList = document.querySelectorAll('.js-favorite-icon-favorite-list')
 
@@ -250,35 +193,7 @@ function searchCocktails() {
 
     if (searchInput.value) {
         searchInputValue = searchInput.value
-<<<<<<< HEAD
-    }
-
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInputValue}`)
-        .then(response => response.json())
-        .then(data => {
-            cocktails = data.drinks
-            createTitle('.js-cocktails-title', `Hay ${cocktails.length} cocktails`)
-            showCocktailList('.js-cocktails-list', cocktails)
-            addOrRemoveCocktailToFavoriteList()
-            getCocktailsFromLocalStorage()
-        })
-}
-
-function handleClickRemoveFavoriteListButton() {
-    localStorage.removeItem('favoriteCocktails')
-    favoriteCocktails = []
-    createTitle('.js-favorite-cocktails-title', 'Añade un cocktail en tu lista de favoritos')
-    showCocktailList('.js-favorite-cocktails-list', favoriteCocktails)
-    removeFavoriteListButton.classList.add('hidden')
-
-    // Select all favorite button in main list to remove the class 'selected'
-    const favoriteButtons = document.querySelectorAll('.js-favorite-icon')
-    for (const favoriteButton of favoriteButtons) {
-        favoriteButton.classList.remove('selected')
-    }    
-}
-removeFavoriteListButton.addEventListener('click', handleClickRemoveFavoriteListButton)
-=======
+        removeErrorMessage()
     } else {
         showErrorMessage()
     }
@@ -315,17 +230,13 @@ function handleClickRemoveFavoriteListButton() {
 }
 removeFavoriteListButton.addEventListener('click', handleClickRemoveFavoriteListButton)
 
-function keepCocktailsSelected() {
-    const cocktailsInLocalStorage = JSON.parse(localStorage.getItem('favoriteCocktails'))
-    if (cocktailsInLocalStorage) {
-        const cocktailsIds = cocktailsInLocalStorage.map(cocktail => cocktail.idDrink)
+// Events
+searchButton.addEventListener('click', handleSearchClick)
 
         for (const cocktailId of cocktailsIds) {
             const element = document.getElementById(cocktailId)
             element.classList.add('selected')
             removeFavoriteListButton.classList.remove('hidden')
         }
-    }
-}
->>>>>>> sass
+    
 //# sourceMappingURL=main.js.map

@@ -193,6 +193,7 @@ function searchCocktails() {
 
     if (searchInput.value) {
         searchInputValue = searchInput.value
+        removeErrorMessage()
     } else {
         showErrorMessage()
     }

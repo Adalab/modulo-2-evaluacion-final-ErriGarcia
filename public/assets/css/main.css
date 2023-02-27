@@ -288,12 +288,6 @@ table {
   display: none; }
 
 .selected {
-<<<<<<< HEAD
-  background-color: red; }
-
-.hidden {
-  display: none; }
-=======
   fill: red;
   stroke: none;
   cursor: pointer; }
@@ -380,6 +374,5 @@ input[type=reset] {
   .footer-logo-logo-adalab {
     width: 103px;
     height: 40px; }
->>>>>>> sass
 
 /*# sourceMappingURL=main.css.map */

@@ -99,6 +99,13 @@ function showCocktailList(classList, cocktailsList) {
         if (!cocktail.strDrinkThumb) {
             cocktail.strDrinkThumb = `https://via.placeholder.com/210x295/ffffff/666666/?text=${cocktail.strDrink}`
         }
+        
+        let paragraph = ''
+        if (cocktail.strAlcoholic === 'Non alcoholic') {
+            paragraph = "No es alcolico"
+        } else {
+            paragraph = "Es alcolico"
+        }
 
         element.innerHTML +=
         `<li class="main-container-section-cocktails-list-main-list-li">
@@ -106,6 +113,7 @@ function showCocktailList(classList, cocktailsList) {
             <img class="cocktail-img" src="${cocktail.strDrinkThumb}">
             <div class="main-container-section-cocktails-list-main-list-li-container">
                 <h4>${cocktail.strDrink}</h4>
+                <p>${paragraph}</p>
                 <ion-icon name="heart" class="js-favorite-icon${favoriteList} ${selected} favorite-button" id="${cocktail.idDrink}">
                 </ion-icon>
             </div>
@@ -241,4 +249,15 @@ function keepCocktailsSelected() {
         }
     }
 }
+
+const buttonLog = document.querySelector('.js-log')
+
+function handleClickButtonLog(event) {
+    console.log(event)
+    for (const cocktail of cocktails) {
+        console.log(cocktail.strDrink)
+    }
+}
+
+buttonLog.addEventListener('click', handleClickButtonLog)
 //# sourceMappingURL=main.js.map
